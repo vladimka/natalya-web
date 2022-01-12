@@ -5,28 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div class="section">
-
-        <div class="sectionDescription" id="synthesisDescription"></div>
-    
-        <form id="synthesisForm" class="synthesisForm">
-    
-          <input id="synthesisText" type="text" class="synthesisFormInput">
-          <select id="synthesisVoicesList" class="synthesisFormInput"></select>
-          <button id="synthesisPlayButton" class="synthesisPlayButton" type="submit">Play</button>
-    
-        </form>
-    
-      </div>
-    
-      <div class="speech-recognition-section">
-        <div class="sectionDescription" id="recognitionDescription"></div>
-        <button id="recognitionPlayButton" class="recognitionPlayButton">Start</button>
-        <div id="recognitionLanguage" class="recognitionLanguage"></div>
-        <div id="recognitionResult" class="recognitionResult"></div>
-      </div>
+    <ul class="history"></ul>
+    <form class="query-form">
+      <input type="text" class="query-input shadow">
+      <button class="query-button">Ask.</button>
+    </form>
     <script src="js/index.js"></script>
 </body>
 </html>
