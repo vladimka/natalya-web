@@ -14,6 +14,8 @@ queryForm.onsubmit = async e => {
         <div class="user-text shadow">${text}</div>
     `;
 
+    text = text.replace(/[.,!?]/g, '').toLowerCase();
+
     let answer = await getAnswer(text);
     historyUl.innerHTML += `
         <div class="natalya-answer shadow">${answer}</div>

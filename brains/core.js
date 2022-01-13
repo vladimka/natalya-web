@@ -25,7 +25,7 @@ class Brains{
         synonimsKeys.forEach(synonimKey => {
             let synonims = this.sinonims[synonimKey];
             synonims.forEach(synonim => {
-                if(!new RegExp(synonim).test(text))return;
+                if(!new RegExp(synonim, 'ig').test(text))return;
                 console.log('Найдено и заменено совпадение с синонимом ' + synonimKey);
                 text = text.replace(synonim, synonimKey);
             });
