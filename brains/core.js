@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const debug = require('debug')('natalya:core');
 
 class InitializationError extends Error{
     constructor(msg){
@@ -26,7 +27,7 @@ class Brains{
             let synonims = this.sinonims[synonimKey];
             synonims.forEach(synonim => {
                 if(!new RegExp(synonim, 'ig').test(text))return;
-                console.log('Найдено и заменено совпадение с синонимом ' + synonimKey);
+                debug('Найдено и заменено совпадение с синонимом: %s -> %s', new RegExp(`(?<word>${synonim})`).exec(text).groups.word, synonimKey);
                 text = text.replace(synonim, synonimKey);
             });
         });
@@ -42,42 +43,42 @@ class Brains{
 
         let answer = this.answers[key];
         answer = answer[Math.floor(Math.random()*answer.length)];
-
-        answer = answer.replace(/@(.+?)\s+/ig, (_, varName) => variables[varName] + " ");
+        debug(`Выбранный ответ: %s`, answer);
+        answer = answer.replace(/\$\{(.+?)\}/ig, (_, code) => eval(code));
 
         return answer;
     }
 
     getAnswer(text){
         let tokenizedText = this.tokenize(text);
-        console.log(`Текст с заменёнными синонимами: ${tokenizedText}`);
+        debug(`Текст с заменёнными синонимами: %s`, tokenizedText);
         let answersKeys = Object.keys(this.answers);
-        let answer = '';
+        let answers = [];
 
-        answersKeys.forEach(key => {
+        for(let key of answersKeys){
             if(!new RegExp(key).test(tokenizedText))
-                return;
-            answer = this.processAnswer(key);
-        });
-        console.log(`Полученный ответ: ${answer}`);
+                    continue;
+            answers.push(this.processAnswer(key));
+        }
+        debug(`Полученный ответ: %j`, answers);
 
-        return answer;
+        return answers.length > 0 ? answers.join(' ') : "Извините, я вас не поняла. Можете повторить?";
     }
 
     loadConfiguration(){
-        console.log('Initialization started.\nLoading config files...');
+        debug('Инициализация.\nЗагрузка конфигурации...');
 
         if(!fs.existsSync(this.sinonimsFile))
-            throw new InitializationError('Initialization failed: No sinonims file found');
+            throw new InitializationError('Инициализация провалена: Файл синонимов не найден');
 
         this.sinonims = JSON.parse(fs.readFileSync(this.sinonimsFile, 'utf-8'));
 
         if(!fs.existsSync(this.answersFile))
-            throw new InitializationError('Initialization failed: No answers file found');
+            throw new InitializationError('Инициализация провалена: Файл ответов не найден');
 
         this.answers = JSON.parse(fs.readFileSync(this.answersFile, 'utf-8'));
 
-        console.log('Initialization complete.');
+        debug('Инициализация закончена.');
     }
 }
 
