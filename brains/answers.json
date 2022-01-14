@@ -1,4 +1,6 @@
 {
     "hi" : ["Здравствуйте, Сэр.", "Привет.", "Ку!", "Хэй!"],
-    ".*how.*time.*" : ["Сейчас ${variables.hours} часов ${variables.minutes} минут."]
+    ".*how.*time.*" : ["Сейчас ${variables.hours} часов ${variables.minutes} минут."],
+    "тест контекстов" : ["${this.startContext('test')}"],
+    ".*how.*today.*day" : ["Сегодня ${variables.date} число, ${variables.day}"]
 }
