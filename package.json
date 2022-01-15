@@ -1,6 +1,6 @@
 {
   "name": "natalya-web",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Web Voice assisstant.",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/vladimka/natalya-web#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "debug": "^4.3.3",

@@ -24,9 +24,13 @@ class Brains{
         this.sinonims = {};
         this.answers = {};
         this.contexts = { 'test' : TestContext };
-        this.currentContext = '';
+        this.sessions = [];
 
         this.loadConfiguration();
+    }
+
+    getSession(id){
+        return this.sessions[id - 1];
     }
 
     tokenize(text){
@@ -44,17 +48,17 @@ class Brains{
         return text;
     }
 
-    startContext(contextName){
-        if(this.currentContext != '')
+    startContext(contextName, sid){
+        if(this.getSession(sid).currentContext != null)
             return;
 
-        let context = this.contexts[contextName];
-        this.currentContext = contextName;
+        let ctx = this.contexts[contextName];
+        this.getSession(sid).currentContext = ctx;
 
-        return context.nextStep('@start@').answer;
+        return ctx.nextStep('@start@').answer;
     }
 
-    processAnswer(key){
+    processAnswer(key, sid){
         const daysOfWeek = [
             "Понедельник",
             "Вторник",
@@ -91,15 +95,17 @@ class Brains{
         return answer;
     }
 
-    getAnswer(text){
+    getAnswer(queryObj){
+        let { text, sid } = queryObj;
+
         debug('Получен вопрос: %s', text);
 
-        if(this.currentContext != ''){
-            let context = this.contexts[this.currentContext];
+        if(this.getSession(sid).currentContext != null){
+            let context = this.getSession(sid).currentContext;
             let res = context.nextStep(text);
 
             if(res.state = 'ended'){
-                this.currentContext = '';
+                this.getSession(sid).currentContext = null;
             }
 
             return res.answer;
@@ -114,7 +120,7 @@ class Brains{
         for(let key of answersKeys){
             if(!new RegExp(key).test(tokenizedText))
                     continue;
-            answers.push(this.processAnswer(key));
+            answers.push(this.processAnswer(key, sid));
         }
         debug(`Полученный ответ: %j`, answers);
 
@@ -135,6 +141,14 @@ class Brains{
         this.answers = JSON.parse(fs.readFileSync(this.answersFile, 'utf-8'));
 
         debug('Инициализация закончена.');
+    }
+
+    addSession(sid){
+        this.sessions.push({ sid, currentContext : null });
+    }
+
+    removeSession(sid){
+        this.sessions.splice(sid - 1, 1);
     }
 }
 

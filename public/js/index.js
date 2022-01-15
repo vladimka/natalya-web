@@ -1,11 +1,22 @@
 const queryForm = document.querySelector('.query-form');
 const historyUl = document.querySelector('.history');
 const queryInput = document.querySelector('.query-input');
+const socket = io();
+let sid = 0;
+
+socket.emit('natalya-getsid');
+socket.on('natalya-sid', id => sid = id);
+
+socket.on('natalya-answer', data => {
+    historyUl.innerHTML += `
+        <div class="natalya-answer shadow">${data.text}</div>
+    `;
+});
 
 queryForm.onsubmit = async e => {
     e.preventDefault();
 
-    let text = queryInput.value.trim();
+    let text = queryInput.value;
 
     if(text == '')
         return;
@@ -13,27 +24,8 @@ queryForm.onsubmit = async e => {
     historyUl.innerHTML += `
         <div class="user-text shadow">${text}</div>
     `;
-
-    text = text.replace(/[.,!?]/g, '').toLowerCase();
-
-    let answer = await getAnswer(text);
-    historyUl.innerHTML += `
-        <div class="natalya-answer shadow">${answer}</div>
-    `;
-
+    text = text.trim().replace(/[.,!?]/g, '').toLowerCase();
     queryInput.value = '';
-}
 
-async function getAnswer(text){
-    const data = await fetch('/query', {
-            method : 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify({ query : text })
-        })
-        .then(res => res.json())
-        .catch(console.error);
-    console.log(data);
-    return data.answer;
+    socket.emit('natalya-query', { text, sid });
 }
