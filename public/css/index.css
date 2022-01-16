@@ -23,7 +23,7 @@ body{
 .query-form>button{
     border: none;
     width: calc(30% - 15px);
-    background: #b219d9;
+    background: #9c27b0;
     color: white;
 }
 
@@ -34,29 +34,43 @@ body{
     border-radius: 5px;
 }
 
-.history{
-    list-style: none;
-    margin: 5px;
+.shadow{
+    box-shadow: 0 0 10px grey;
 }
 
-.history div{
-    padding: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+/* .message-list{
+    max-height: 70%;
+    overflow: hidden;
+} */
+
+.message-wrapper{
+    display: flex;
+}
+
+.message{
+    background-color: grey;
     border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    max-width: 50%;
+    color: black;
+    background-color: white;
 }
 
-.history .user-text{
-    text-align: right;
-    background-color: #9c27b0;
-    color: white;  
-}
-
-.history .natalya-answer{
-    background-color: #792c87;
+.message.mine{
+    background: #9c27b0;
     color: white;
 }
 
-.shadow{
-    box-shadow: 0 0 10px grey;
+.message-wrapper.mine{
+    justify-content: flex-end;
+}
+
+.message .name{
+    color: #9c27b0;
+}
+
+.message .timestamp{
+    font-size: .5rem;
+    color: grey;
 }
